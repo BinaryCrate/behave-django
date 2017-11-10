@@ -15,3 +15,7 @@ def before_scenario(context, scenario):
     if scenario.name == 'Load fixtures then reset sequences':
         context.fixtures.append('behave-second-fixture.json')
         context.reset_sequences = True
+
+
+def before_django(context):
+    context.django = True

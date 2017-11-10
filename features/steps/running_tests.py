@@ -14,3 +14,8 @@ def run_command(context):
 @then(u'I should see the behave tests run')
 def is_running(context):
     pass
+
+
+@then(u'context.django should be declared')
+def django_context(context):
+    assert context.django

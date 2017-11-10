@@ -7,3 +7,7 @@ Feature: Running tests
         Given this step exists
         When I run "python manage.py behave"
         Then I should see the behave tests run
+
+    Scenario: Test before_django
+        When I run "python manage.py behave"
+        Then context.django should be declared
