@@ -30,6 +30,8 @@ class BehaviorDrivenTestCase(BehaviorDrivenTestMixin,
 
     This test case prevents the regular tests from running.
     """
+    host = 'webserver'
+    port = 8000
 
 
 class ExistingDatabaseTestCase(BehaviorDrivenTestCase):
