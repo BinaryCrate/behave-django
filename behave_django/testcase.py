@@ -1,5 +1,6 @@
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.test.testcases import TestCase
+import psutil
 
 
 class BehaviorDrivenTestMixin(object):
@@ -23,6 +24,11 @@ class BehaviorDrivenTestMixin(object):
         pass
 
 
+class ClassProperty(property):
+    def __get__(self, cls, owner):
+        return self.fget.__get__(None, owner)()
+
+
 class BehaviorDrivenTestCase(BehaviorDrivenTestMixin,
                              StaticLiveServerTestCase):
     """
@@ -31,7 +37,16 @@ class BehaviorDrivenTestCase(BehaviorDrivenTestMixin,
     This test case prevents the regular tests from running.
     """
     host = 'webserver'
-    port = 8000
+
+    @ClassProperty
+    @classmethod
+    def port(cls):
+        # From https://stackoverflow.com/a/1383402
+        usedports = {c.laddr.port for c in psutil.net_connections() if c.laddr.port >= 8000 and c.laddr.port <= 8100}
+        for port in range(8000, 8100):
+            if port not in usedports:
+                return port
+        assert False, 'There are no available ports for the test run'
 
 
 class ExistingDatabaseTestCase(BehaviorDrivenTestCase):
